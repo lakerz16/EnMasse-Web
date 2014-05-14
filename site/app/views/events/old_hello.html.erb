@@ -1,0 +1,131 @@
+<!--<h1>Events#hello</h1>
+<p>Find me in app/views/events/hello.html.erb</p>-->
+
+<!doctype html>
+
+<head>
+  <meta charset="utf-8">
+
+  <title>My Parse App</title>
+  <meta name="description" content="My Parse App">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.18.min.js"></script>
+</head>
+
+<body>
+
+  <div id="main">
+
+    <p>Read the documentation and start building your JavaScript app:</p>
+
+    <ul>
+      <li><a href="https://www.parse.com/docs/js_guide">Parse JavaScript Guide</a></li>
+      <li><a href="https://www.parse.com/docs/js">Parse JavaScript API Documentation</a></li>
+    </ul>
+
+    <div style="display:none" class="error">
+      Looks like there was a problem saving the test object. Make sure you've set your application ID and javascript key correctly in the call to <code>Parse.initialize</code> in this file.
+    </div>
+
+    <div style="display:none" class="success">
+      <p>We've also just created your first object using the following code:</p>
+
+        <!--<code>
+          var TestObject = Parse.Object.extend("TestObject");<br/>
+          var testObject = new TestObject();<br/>
+          testObject.save({foo: "bar"});
+        </code>-->
+    </div>
+
+    <div id="comments">
+
+  </div>
+
+  </div>
+
+  <script type="text/javascript">
+    Parse.initialize("JE0GEpwICTvpddKlUgJqLEg43RcZHVnf5m6axFcI", "fcMLE9v5LEieB5aHyRINEGIQChTf8wfptL4AIonq");
+
+    /*var TestObject = Parse.Object.extend("TestObject");
+    var testObject = new TestObject();
+      testObject.save({foo: "bar"}, {
+      success: function(object) {
+        $(".success").show();
+      },
+      error: function(model, error) {
+        $(".error").show();
+      }
+    });*/
+
+    var events = Parse.Object.extend("Events");
+    var query = new Parse.Query(events);
+    query.find({
+      success: function(results) {
+
+        var foo = "";
+
+        var first = true;
+
+        for(var i=0; i < results.length; i++) {
+          foo = foo.concat(results[i].get('name')).concat("<br><br>");
+
+          if(results[i].get('coordinates').split(',').length == 2 && results[i].get('date') > 0) {
+
+            if(first) {
+
+              var weather = httpGet( 'https://api.forecast.io/forecast/f84b66c211f075b07365219b85a7192d/'.concat(results[i].get('coordinates').split(',')[0]).concat(',').concat(results[i].get('coordinates').split(',')[1]).concat(',').concat(Math.round(results[i].get('date')/1000)));
+
+              //alert(weather);
+              //foo = foo.concat(weather).concat("<br><br>");
+
+            }
+
+            first = false;
+          }
+      }
+
+        document.getElementById('comments').innerHTML = foo;
+      },
+      error: function(error) {
+        alert("Error: " + error.code + " " + error.message);
+      }
+  });
+
+  function httpGet(theUrl) {
+
+    <% response = Net::HTTP.get_response(theUrl) %>
+<%= debug response.body %>
+
+      var returnValue = '';
+
+      $.ajax({
+        url: theUrl,
+        dataType: "jsonp",
+        success: function (json) {
+
+          var time = json["currently"]["time"];
+          //alert(time);
+
+          var icon = json["currently"]["icon"];
+          //alert(icon);
+
+          returnValue = time + ", " + icon;
+
+          $(this).closest('div[id^=level]').append(returnValue)
+
+          alert(returnValue);
+
+          //alert(returnValue);
+        }
+      });
+
+      return returnValue;
+  }
+
+  </script>
+</body>
+
+</html>
