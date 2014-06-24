@@ -8,4 +8,8 @@ class Events
   #  .value_in("score", [10, 20, 30, 40])
   #  .get
 
+  def self.event_name
+    "name"
+  end
+
 end

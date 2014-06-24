@@ -18,7 +18,8 @@
     <div id="comments">
 
       <% Events.all.each do |item| %>
-        <%= debug item %>
+        <%= debug item[Events.event_name] %>
+        <%= debug Events.event_name %>
       <% end %>
 
 	  </div>

@@ -1,4 +1,4 @@
 class EventsController < ApplicationController
-  def hello
+  def index
   end
 end
